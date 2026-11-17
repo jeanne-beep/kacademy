@@ -15,7 +15,11 @@ S.private=Object.assign({hours:[],checkins:[],profile:{}},S.private);
 let me=sessionStorage.getItem('kae_me')||null,tab='week',sel=null,pins=JSON.parse(localStorage.getItem('kae_pins')||'{}');
 const save=()=>{localStorage.setItem(KEY,JSON.stringify(S));if(typeof syncPush==='function')syncPush()};
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
-const allAsg=()=>ASG.concat(S.custom||[]);
+S.notes=S.notes||{};
+const allAsg=()=>ASG.concat(S.custom||[]).map(a=>{const n=S.notes[a.id];return n&&n.desc?{...a,desc:n.desc}:a});
+const vExplain=id=>{const x=EXPLAIN[id],n=S.notes[id];
+  return(x?`<div class="card good"><h3>💡 Understand it</h3><p><b>Why it matters:</b> ${esc(x.why)}</p><p><b>How to do it:</b> ${esc(x.how)}</p><p><b>Tip:</b> ${esc(x.tip)}</p></div>`:'')
+   +(n&&n.extra?`<div class="card"><h3>📝 Notes from Mrs. K</h3><p>${esc(n.extra).replace(/\n/g,'<br>')}</p></div>`:'')};
 const asgFor=p=>allAsg().filter(a=>a.who.includes(p)).sort((a,b)=>a.due.localeCompare(b.due));
 const subOf=(p,id)=>S.sub[p+'/'+id],gradeOf=(p,id)=>S.grade[p+'/'+id];
 const quizName=a=>QUIZ[a.quiz]?.name||a.title;
@@ -72,7 +76,7 @@ function vAsg(id){
   const stepsKey=p+'/steps:'+id,pl=S.sub[stepsKey]||{list:a.steps.map(t=>({t,day:'',done:false})),custom:false};
   const rub=RUB[a.rub]||RUB.gen,tot=rub.reduce((x,r)=>x+r[1],0);
   return`${back}<h1>${COURSES[a.course].e} ${esc(a.title)}</h1><p class="mut sm">${esc(COURSES[a.course].name)} · due ${fdate(a.due)} · ${esc(a.std||'')}</p>
-  <div class="card"><p>${esc(a.desc)}</p></div>
+  <div class="card"><p>${esc(a.desc)}</p></div>${vExplain(a.id)}
   <div class="card"><h3>🧩 My plan (break it down your way)</h3>
    ${pl.list.map((st,i)=>`<div class="row"><input type="checkbox" ${st.done?'checked':''} onchange="stepDone('${id}',${i},this.checked)"><span class="grow ${st.done?'dn':''}">${esc(st.t)}</span><input type="date" class="dsm" value="${st.day||''}" onchange="stepDay('${id}',${i},this.value)"></div>`).join('')}
    <div class="row"><input id="newstep" placeholder="Add your own step"><button class="btn s sm" onclick="addStep('${id}')">Add</button></div>
@@ -109,7 +113,7 @@ function vGradeCard(a,g,s){const rub=RUB[a.rub]||RUB.gen,raw=g.scores.reduce((x,
 // ---------- quizzes (instant) ----------
 function vQuiz(a){const q=QUIZ[a.quiz],s=subOf(me,a.id);
   return`<h1>${COURSES[a.course].e} ${esc(q.name)}</h1><p class="mut sm">Instant results and explanations. You may retake it.</p>
-  ${s?`<div class="card good"><h3>Last score: ${s.score}/${q.qs.length}</h3></div>`:''}
+  ${vExplain(a.id)}${s?`<div class="card good"><h3>Last score: ${s.score}/${q.qs.length}</h3></div>`:''}
   <div class="card">${q.qs.map((x,i)=>`<div class="qq"><b>${i+1}. ${esc(x[0])}</b>${x[1].map((o,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}" ${s&&s.ans?.[i]===j?'checked':''}> ${esc(o)}</label>`).join('')}<div id="fb${i}" class="fb"></div></div>`).join('')}
   <button class="btn g" onclick="gradeQuiz('${a.id}')">Check my answers</button></div>`}
 function gradeQuiz(id){const a=allAsg().find(x=>x.id===id),q=QUIZ[a.quiz];let sc=0;const ans=[];
@@ -157,7 +161,20 @@ function addC(b){const t=$('#gc');t.value=(t.value?t.value+' ':'')+b.dataset.t}
 function saveGrade(p,id){const a=allAsg().find(x=>x.id===id),rub=RUB[a.rub]||RUB.gen;
   const scores=rub.map((r,i)=>Math.max(0,Math.min(r[1],+($('#sc'+i).value||0))));
   S.grade[p+'/'+id]={scores,comment:$('#gc').value,at:new Date().toISOString()};save();toast('Feedback saved');sel=null;render()}
-function vAssign(){return`<h1>Post an assignment</h1><div class="card">
+function vReview(id){const a=allAsg().find(x=>x.id===id),x=EXPLAIN[id]||{},n=S.notes[id]||{},rub=RUB[a.rub]||RUB.gen;
+  return`<button class="btn s sm" onclick="sel=null;render()">← All assignments</button><h1>${COURSES[a.course].e} ${esc(a.title)}</h1>
+  <p class="mut sm">${a.who.map(w=>person(w).name).join(' & ')} · due ${fdate(a.due)} · ${esc(a.std||'')}</p>
+  <div class="card"><h3>Instructions students see (edit to fit)</h3><textarea id="rdesc" rows="5">${esc(a.desc)}</textarea></div>
+  <div class="card good"><h3>💡 My suggested explanation</h3><p><b>Why it matters:</b> ${esc(x.why||'')}</p><p><b>How to do it:</b> ${esc(x.how||'')}</p><p><b>Tip:</b> ${esc(x.tip||'')}</p><p class="sm mut">Students see this automatically.</p></div>
+  <div class="card"><h3>📝 Your notes to students</h3><textarea id="rextra" rows="5" placeholder="Add your own explanation, examples, or expectations\u2026">${esc(n.extra||'')}</textarea></div>
+  ${a.quiz?'':`<div class="card"><h3>Rubric (${rub.reduce((s,r)=>s+r[1],0)} pts)</h3>${rub.map(r=>`<div class="row"><span class="grow">${esc(r[0])}</span><b>${r[1]}</b></div>`).join('')}</div>`}
+  <button class="btn g" onclick="saveNote('${id}')">Save</button> <button class="btn s" onclick="resetNote('${id}')">Restore original</button>`}
+function saveNote(id){const a=ASG.concat(S.custom).find(x=>x.id===id),d=$('#rdesc').value.trim();
+  S.notes[id]={desc:d&&d!==a.desc?d:'',extra:$('#rextra').value.trim()};save();toast('Saved. Students see it now');sel=null;render()}
+function resetNote(id){delete S.notes[id];save();sel=null;render()}
+function vAssign(){if(sel&&sel.startsWith('r:'))return vReview(sel.slice(2));
+  return`<h1>Review & edit assignments</h1><div class="card">${allAsg().sort((a,b)=>a.due.localeCompare(b.due)).map(a=>`<div class="row click" onclick="sel='r:${a.id}';render()"><span class="e">${COURSES[a.course].e}</span><span class="grow"><b>${esc(a.title)}</b><div class="sm mut">${a.who.map(w=>person(w).name).join(' & ')} · due ${fdate(a.due)}${S.notes[a.id]?' · ✏️ edited':''}</div></span>›</div>`).join('')}</div>
+  <h1>Post an assignment</h1><div class="card">
   <input id="at" placeholder="Title"><select id="ac">${Object.entries(COURSES).map(([k,c])=>`<option value="${k}">${c.name}</option>`).join('')}</select>
   <input id="ad" type="date" value="${addDays(dkey(),(4-new Date().getDay()+7)%7||7)}">
   <label class="opt"><input type="checkbox" id="aj" checked> Jackson</label><label class="opt"><input type="checkbox" id="ar" checked> Ryley</label>
