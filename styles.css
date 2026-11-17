@@ -19,3 +19,4 @@ table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}td,th{bord
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000c;padding:10px 18px;border-radius:20px;opacity:0;transition:.3s;pointer-events:none}.toast.show{opacity:1}
 .invoice{background:#fff;color:#111;border-radius:10px;padding:18px;margin-top:10px}.invoice td,.invoice th{border-color:#ccc}
 @media print{body{background:#fff}.noprint{display:none!important}.invoice{margin:0;padding:0}}
+.btn.full{display:block;width:100%;text-align:left;margin:6px 0}

@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 const KEY='kae_v1',$=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad=n=>String(n).padStart(2,'0');
@@ -32,8 +32,8 @@ const CHIP={todo:['To do','c-todo'],late:['Past due','c-late'],submitted:['Submi
 const chip=st=>`<span class="chip ${CHIP[st][1]}">${CHIP[st][0]}</span>`;
 
 // ---------- shell ----------
-const STU_TABS=[['week','📅 This Week'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['links','🔗 Links']];
-const PAR_TABS=[['overview','📊 Overview'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['settings','⚙️ Settings']];
+const STU_TABS=[['week','📅 This Week'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['play','🎮 Play & Learn'],['links','🔗 Links']];
+const PAR_TABS=[['overview','📊 Overview'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['exam','🎓 NCE/NCMHCE'],['settings','⚙️ Settings']];
 function render(){
   const v=$('#view'),nav=$('#nav'),who=$('#who');
   if(!me){nav.innerHTML='';who.innerHTML='';v.innerHTML=vLogin();return}
@@ -41,7 +41,7 @@ function render(){
   const tabs=p.parent?PAR_TABS:STU_TABS;
   if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
   nav.innerHTML=tabs.map(([k,l])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
-  const M={week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,settings:vSettings};
+  const M={week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,exam:vExam,play:vPlay,settings:vSettings};
   v.innerHTML=(p.parent?'':vDueSoon())+M[tab]()}
 function go(t){tab=t;sel=null;render();scrollTo(0,0)}
 function vLogin(){return`<div class="card"><h1>🏫 K\u2019s Academy of Excellence</h1><p class="mut">Who is here?</p><div class="grid">${PEOPLE.map(p=>`<button class="tile" onclick="pickPerson('${p.id}')"><span class="big">${p.e}</span>${esc(p.name)}</button>`).join('')}</div></div>`}
@@ -226,9 +226,10 @@ function delCheck(id){S.private.checkins=S.private.checkins.filter(x=>x.id!==id)
 function vSettings(){const p=S.private.profile;
   return`<h1>Settings</h1>${['ryley','jackson'].map(k=>{const b=p[k]||{};return`<div class="card"><h3>${person(k).name} invoice details</h3><input id="bt_${k}" placeholder="Bill to name" value="${esc(b.billTo||(k==='ryley'?'Ryan Audibert':''))}"><textarea id="ba_${k}" rows="2" placeholder="Address">${esc(b.addr||'')}</textarea><input id="bp_${k}" placeholder="Phone (for Text)" value="${esc(b.phone||'')}"></div>`}).join('')}
   <button class="btn g" onclick="saveProfile()">Save</button><p class="sm mut">Addresses and phone numbers stay in the private database and are never in the app code.</p>
-  <div class="card"><h3>Reset a PIN</h3>${PEOPLE.map(x=>`<button class="btn s sm" onclick="resetPin('${x.id}')">${x.name}</button>`).join(' ')}</div>`}
+  ${vApprove()}<div class="card"><h3>Reset a PIN</h3>${PEOPLE.map(x=>`<button class="btn s sm" onclick="resetPin('${x.id}')">${x.name}</button>`).join(' ')}</div>`}
 function saveProfile(){['ryley','jackson'].forEach(k=>S.private.profile[k]={billTo:$('#bt_'+k).value,addr:$('#ba_'+k).value,phone:$('#bp_'+k).value});save();toast('Saved')}
 function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.stringify(pins));toast('PIN reset')}
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
