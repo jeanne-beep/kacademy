@@ -32,8 +32,8 @@ const CHIP={todo:['To do','c-todo'],late:['Past due','c-late'],submitted:['Submi
 const chip=st=>`<span class="chip ${CHIP[st][1]}">${CHIP[st][0]}</span>`;
 
 // ---------- shell ----------
-const STU_TABS=[['week','📅 This Week'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['play','🎮 Play & Learn'],['links','🔗 Links']];
-const PAR_TABS=[['overview','📊 Overview'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['exam','🎓 NCE/NCMHCE'],['settings','⚙️ Settings']];
+const STU_TABS=[['week','📅 This Week'],['cal','🗓️ Calendar'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['play','🎮 Play & Learn'],['links','🔗 Links']];
+const PAR_TABS=[['overview','📊 Overview'],['cal','🗓️ Calendar'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['exam','🎓 NCE/NCMHCE'],['settings','⚙️ Settings']];
 function render(){
   const v=$('#view'),nav=$('#nav'),who=$('#who');
   if(!me){nav.innerHTML='';who.innerHTML='';v.innerHTML=vLogin();return}
@@ -41,7 +41,7 @@ function render(){
   const tabs=p.parent?PAR_TABS:STU_TABS;
   if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
   nav.innerHTML=tabs.map(([k,l])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
-  const M={week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,exam:vExam,play:vPlay,settings:vSettings};
+  const M={cal:vCal,week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,exam:vExam,play:vPlay,settings:vSettings};
   v.innerHTML=(p.parent?'':vDueSoon())+M[tab]()}
 function go(t){tab=t;sel=null;render();scrollTo(0,0)}
 function vLogin(){return`<div class="card"><h1>🏫 K\u2019s Academy of Excellence</h1><p class="mut">Who is here?</p><div class="grid">${PEOPLE.map(p=>`<button class="tile" onclick="pickPerson('${p.id}')"><span class="big">${p.e}</span>${esc(p.name)}</button>`).join('')}</div></div>`}
@@ -232,4 +232,5 @@ function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.strin
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
 
