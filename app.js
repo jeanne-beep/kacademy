@@ -18,7 +18,7 @@ function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');se
 S.notes=S.notes||{};
 const allAsg=()=>ASG.concat(S.custom||[]).map(a=>{const n=S.notes[a.id];return n&&n.desc?{...a,desc:n.desc}:a});
 const vExplain=id=>{const x=EXPLAIN[id],n=S.notes[id];
-  return(x?`<div class="card good"><h3>💡 Understand it</h3><p><b>Why it matters:</b> ${esc(x.why)}</p><p><b>How to do it:</b> ${esc(x.how)}</p><p><b>Tip:</b> ${esc(x.tip)}</p></div>`:'')
+  return vLesson(id)+(x?`<div class="card good"><h3>💡 Understand it</h3><p><b>Why it matters:</b> ${esc(x.why)}</p><p><b>How to do it:</b> ${esc(x.how)}</p><p><b>Tip:</b> ${esc(x.tip)}</p></div>`:'')
    +(n&&n.extra?`<div class="card"><h3>📝 Notes from Mrs. K</h3><p>${esc(n.extra).replace(/\n/g,'<br>')}</p></div>`:'')};
 const asgFor=p=>allAsg().filter(a=>a.who.includes(p)).sort((a,b)=>a.due.localeCompare(b.due));
 const subOf=(p,id)=>S.sub[p+'/'+id],gradeOf=(p,id)=>S.grade[p+'/'+id];
@@ -232,6 +232,7 @@ function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.strin
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
 
 
 
