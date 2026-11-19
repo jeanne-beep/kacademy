@@ -1,9 +1,9 @@
-'use strict';
+﻿'use strict';
 // K's Academy of Excellence: course content. Standards tags are LDOE-style references; verify against current LDOE documents before using on a transcript.
 const PARENT='jeanne';
 const PEOPLE=[
   {id:'jeanne',name:'Mrs. K',e:'👩‍🏫',parent:true},
-  {id:'jackson',name:'Jackson',e:'🔧',career:'welding'},
+  {id:'jackson',name:'Jaxson',e:'🔧',career:'welding'},
   {id:'ryley',name:'Ryley',e:'🩺',career:'ultrasound'}];
 const STUDENTS=['jackson','ryley'];
 const LINKS={study:'https://study.com/',actReg:'https://www.act.org/content/act/en/products-and-services/the-act/registration.html',actDates:'https://www.act.org/content/act/en/products-and-services/the-act/registration/test-dates.html',actPrep:'https://www.act.org/content/act/en/products-and-services/the-act/test-preparation.html',actAccom:'https://www.act.org/content/act/en/products-and-services/the-act/registration/accommodations.html'};
@@ -64,7 +64,7 @@ const ASG=[
  {id:'q-act-eng',course:'act',title:'ACT English mini-quiz #1',due:'2026-11-19',who:['jackson','ryley'],quiz:'actEng',desc:'Instant results with explanations.',std:'ACT English'},
  {id:'q-act-math',course:'act',title:'ACT Math mini-quiz #1',due:'2026-11-25',who:['jackson','ryley'],quiz:'actMath',desc:'Instant results with explanations.',std:'ACT Math'},
  {id:'wr1',course:'act',title:'Practical writing: a professional email',due:'2026-12-03',who:['jackson','ryley'],rub:'gen',min:100,
-  desc:'Jackson: email a votech welding program asking about the application deadline. Ryley: email your ultrasound program\u2019s admissions office asking about prerequisites. Use a subject line, greeting, clear question, closing.',
+  desc:'Jaxson: email a votech welding program asking about the application deadline. Ryley: email your ultrasound program\u2019s admissions office asking about prerequisites. Use a subject line, greeting, clear question, closing.',
   steps:['Find the program\u2019s name and contact','Draft subject line','Write 3 short paragraphs','Proofread tone and spelling'],std:'W.11-12.4, L.11-12.1'},
  // Economics (scaled down)
  {id:'q-econ1',course:'econ',title:'Economics quiz: scarcity & opportunity cost',due:'2026-11-25',who:['jackson','ryley'],quiz:'econ1',desc:'Instant results.',std:'Economics 1'},
@@ -88,7 +88,7 @@ const QUIZ={
   ['Which uses a comma correctly?',['I went to the store, and bought milk.','I went to the store and bought milk.','I went, to the store and bought milk.','I went to the store and, bought milk.'],1,'No comma before "and" joining two verbs sharing one subject.'],
   ['Choose the best word: "The new policy will ____ everyone."',['affect','effect','affet','effects'],0,'Affect is the verb; effect is the noun.'],
   ['Which is a complete sentence?',['Running down the hill.','Because the storm was strong.','The storm knocked out power.','When the lights went out.'],2,'It has a subject and a verb and is a complete thought.'],
-  ['Choose the correct pronoun: "Jackson and ____ finished the project."',['me','I','myself','us'],1,'Remove "Jackson and": "I finished" is correct.'],
+  ['Choose the correct pronoun: "Jaxson and ____ finished the project."',['me','I','myself','us'],1,'Remove "Jaxson and": "I finished" is correct.'],
   ['Which is most concise?',['In my opinion, I think that it is good.','I think it is good.','It is my thought that it is good.','Personally I do think it is good.'],1,'ACT rewards concision.'],
   ['Pick the correctly punctuated sentence.',['The dog, wagged its tail.','The dog wagged, its tail.','The dog wagged its tail.','The, dog wagged its tail.'],2,'No comma between subject and verb.'],
   ['Choose: "Each of the students ____ a book."',['have','has','are having','were'],1,'"Each" is singular.']]},
@@ -152,3 +152,4 @@ econ2:{why:'Demand says people buy less as price rises; supply says producers of
 wweld:{why:'Spotting hazards before they happen is the core professional skill. A shop inspection is exactly what a safety officer does.',how:'Walk the garage with a clipboard. For each hazard write what it is, why it is dangerous, and the fix. Check flammables near the work area, ventilation, extinguisher, and cord condition.',tip:'Photos make your report stronger.'},
 'q-med1':{why:'Medical words are built like Lego: prefix + root + suffix. Learn the parts and you can decode thousands of terms.',how:'Say the term, then split it. "Gastr/itis" = stomach + inflammation.',tip:'Make flashcards of every part you miss.'},
 wmed:{why:'Breaking words apart is the skill that lets sonographers read orders and charts quickly.',how:'For each term write prefix, root, suffix, and the meaning in plain English. Check a medical dictionary for pronunciation.',tip:'Teach three of them aloud to someone at home.'}};
+

@@ -177,7 +177,7 @@ function vAssign(){if(sel&&sel.startsWith('r:'))return vReview(sel.slice(2));
   <h1>Post an assignment</h1><div class="card">
   <input id="at" placeholder="Title"><select id="ac">${Object.entries(COURSES).map(([k,c])=>`<option value="${k}">${c.name}</option>`).join('')}</select>
   <input id="ad" type="date" value="${addDays(dkey(),(4-new Date().getDay()+7)%7||7)}">
-  <label class="opt"><input type="checkbox" id="aj" checked> Jackson</label><label class="opt"><input type="checkbox" id="ar" checked> Ryley</label>
+  <label class="opt"><input type="checkbox" id="aj" checked> Jaxson</label><label class="opt"><input type="checkbox" id="ar" checked> Ryley</label>
   <select id="arub"><option value="journal">Journal rubric</option><option value="essay">Essay rubric</option><option value="creative">Creative rubric</option><option value="econ">Economics rubric</option><option value="gen">General rubric</option></select>
   <textarea id="adesc" rows="4" placeholder="Instructions / extension activity"></textarea><textarea id="asteps" rows="4" placeholder="Suggested steps, one per line"></textarea>
   <input id="alink" placeholder="Optional study.com lesson link">
@@ -191,7 +191,7 @@ function delAsg(id){S.custom=S.custom.filter(a=>a.id!==id);save();render()}
 // ---------- hours & invoices ----------
 const RATE={direct:30,admin:40},JFLAT=200;
 function vHours(){const wk=weekStart(),hs=S.private.hours;
-  return`<h1>Log hours</h1><div class="card"><div class="row"><input type="date" id="hd" value="${dkey()}"><select id="hs"><option value="ryley">Ryley</option><option value="jackson">Jackson</option></select></div>
+  return`<h1>Log hours</h1><div class="card"><div class="row"><input type="date" id="hd" value="${dkey()}"><select id="hs"><option value="ryley">Ryley</option><option value="jackson">Jaxson</option></select></div>
   <div class="row"><select id="ht"><option value="direct">Direct teaching ($30/hr)</option><option value="admin">Curriculum / admin / records ($40/hr)</option></select><input type="number" id="hh" step="0.25" min="0" placeholder="Hours" style="width:90px"></div>
   <input id="hn" placeholder="Note (what you did)"><button class="btn g" onclick="addHrs()">Add</button></div>
   <div class="card"><h3>Recent</h3>${hs.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,25).map(h=>`<div class="row"><span class="grow">${fdate(h.date)} · ${person(h.who).name} · ${h.type==='direct'?'Direct':'Admin'} · ${h.hrs}h <span class="sm mut">${esc(h.note||'')}</span></span><button class="btn r sm" onclick="delHrs('${h.id}')">✕</button></div>`).join('')||'<p class="mut">No entries</p>'}</div>`}
@@ -202,7 +202,7 @@ function invData(){const end=addDays(invWk,6),hs=S.private.hours.filter(h=>h.who
   d=hs.filter(h=>h.type==='direct').reduce((a,h)=>a+h.hrs,0),ad=hs.filter(h=>h.type==='admin').reduce((a,h)=>a+h.hrs,0);
   const flat=invWho==='jackson';return{hs,d,ad,end,total:flat?JFLAT:d*RATE.direct+ad*RATE.admin,flat}}
 function vInvoice(){const pr=S.private.profile,x=invData(),bill=pr[invWho]||{};
-  return`<div class="noprint"><h1>Weekly invoice</h1><div class="row"><select onchange="invWho=this.value;render()"><option value="ryley" ${invWho==='ryley'?'selected':''}>Ryley (billed to ${esc(pr.ryley?.billTo||'Ryan Audibert')})</option><option value="jackson" ${invWho==='jackson'?'selected':''}>Jackson (flat $${JFLAT})</option></select>
+  return`<div class="noprint"><h1>Weekly invoice</h1><div class="row"><select onchange="invWho=this.value;render()"><option value="ryley" ${invWho==='ryley'?'selected':''}>Ryley (billed to ${esc(pr.ryley?.billTo||'Ryan Audibert')})</option><option value="jackson" ${invWho==='jackson'?'selected':''}>Jaxson (flat $${JFLAT})</option></select>
   <button class="btn s sm" onclick="invWk=addDays(invWk,-7);render()">◀</button><b>${fdate(invWk)} – ${fdate(x.end)}</b><button class="btn s sm" onclick="invWk=addDays(invWk,7);render()">▶</button></div>
   <button class="btn g" onclick="window.print()">🖨️ Save as PDF / print</button>
   ${bill.phone?`<a class="btn s" href="sms:${esc(bill.phone)}&body=${encodeURIComponent(`Invoice for ${person(invWho).name}, week of ${fdate(invWk)}: $${x.total}. K\u2019s Academy of Excellence.`)}">💬 Text it</a>`:'<p class="sm mut">Add a phone number in Settings to enable Text.</p>'}
@@ -216,7 +216,7 @@ function vInvoice(){const pr=S.private.profile,x=invData(),bill=pr[invWho]||{};
 // ---------- parent-only check-in ----------
 const PROMPTS=['What was the best part of your week?','What felt hardest, and what helped?','How are you sleeping and eating?','What are you looking forward to?','Is anything making school feel heavy right now?'];
 function vCheckin(){const c=S.private.checkins;
-  return`<h1>💬 Weekly check-in <span class="chip c-sub">private to you</span></h1><div class="card"><select id="cp"><option value="ryley">Ryley</option><option value="jackson">Jackson</option></select><input type="date" id="cd" value="${dkey()}">
+  return`<h1>💬 Weekly check-in <span class="chip c-sub">private to you</span></h1><div class="card"><select id="cp"><option value="ryley">Ryley</option><option value="jackson">Jaxson</option></select><input type="date" id="cd" value="${dkey()}">
   ${[['mood','Mood'],['stress','Stress'],['sleep','Sleep quality']].map(([k,l])=>`<div class="row"><span class="grow">${l} (1 low \u2013 5 high)</span><select id="c_${k}">${[1,2,3,4,5].map(n=>`<option ${n===3?'selected':''}>${n}</option>`).join('')}</select></div>`).join('')}
   <p class="sm mut">Try asking: ${PROMPTS.map(esc).join(' · ')}</p><textarea id="cn" rows="4" placeholder="What they shared, what you noticed, next step\u2026"></textarea><button class="btn g" onclick="addCheck()">Save</button>
   <p class="sm mut">This is a wellness log for you, not a clinical record. If Ryley\u2019s anxiety is affecting daily life, a licensed counselor can help; the ACT accommodations request also needs one.</p></div>
@@ -232,5 +232,6 @@ function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.strin
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
 
 
