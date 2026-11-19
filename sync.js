@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 // ---------- K's Academy sync (Supabase) ----------
 // Every key of S (objects split one level deeper) is one row in `kv`. Row-level security decides who can read/write what.
 let sb=null,syncOn=false,syncState='',snap=JSON.parse(localStorage.getItem('kae_snap')||'{}'),pushT=0,pushing=false,renderT=0;
@@ -21,7 +21,7 @@ function setSyncState(s){syncState=s;let d=document.getElementById('syncdot');
 
 function softRender(){
   const a=document.activeElement,busy=a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName),modalOpen=!$('#modal').classList.contains('hidden');
-  if(busy||modalOpen){clearTimeout(renderT);renderT=setTimeout(softRender,3000);return}
+  if(busy||modalOpen||simBusy){clearTimeout(renderT);renderT=setTimeout(softRender,3000);return}
   render()}
 
 async function syncPull(){
@@ -46,7 +46,7 @@ async function doPush(){
     for(const p in snap)if(!(p in loc)&&canWrite(p))del.push(p);
     for(let i=0;i<up.length;i+=100){const {error}=await sb.from('kv').upsert(up.slice(i,i+100));if(error)throw error}
     if(del.length){const {error}=await sb.from('kv').delete().in('key',del);if(error)throw error}
-    up.forEach(r=>snap[r.key]=loc[r.key]);del.forEach(p=>delete snap[p]);saveSnap();setSyncState('ok')
+    up.forEach(r=>snap[r.key]=loc[r.key]);del.forEach(p=>delete snap[p]);saveSnap();setSyncState('ok');if(up.some(r=>/^(cal|custom)/.test(r.key))&&typeof syncReminders==='function')setTimeout(syncReminders,3000)
   }catch(e){setSyncState('offline')}finally{pushing=false}}
 
 function onRemote(pl){
@@ -85,6 +85,8 @@ async function syncStart(session){
   setInterval(()=>{if(!document.hidden)syncPull().then(()=>{if(syncState!=='ok')setSyncState('ok');syncPush()}).catch(()=>setSyncState('offline'))},60000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)syncPull().then(()=>{setSyncState('ok');syncPush()}).catch(()=>setSyncState('offline'))});
   addEventListener('online',()=>{syncPull().then(syncPush).catch(()=>{})});
+  setTimeout(()=>typeof syncReminders==='function'&&syncReminders(),4000);setInterval(()=>typeof syncReminders==='function'&&syncReminders(),3*3600e3);
+  if(localStorage.getItem('kae_push')===me&&typeof pushCapable==='function'&&pushCapable()&&Notification.permission==='granted')navigator.serviceWorker.ready.then(r=>r.pushManager.getSubscription()).then(s=>s&&savePushSub(s)).catch(()=>{});
   render()}
 
 async function syncInit(){
@@ -94,3 +96,5 @@ async function syncInit(){
   if(data.session)syncStart(data.session);else{me=null;sessionStorage.removeItem('kae_me');render();syncGate()}
   sb.auth.onAuthStateChange((ev,s)=>{if(ev==='SIGNED_OUT'&&!s&&!document.getElementById('gate'))syncGate()})}
 syncInit();
+
+

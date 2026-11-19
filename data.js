@@ -134,7 +134,7 @@ const QUIZ={
   ['"-ology" means…',['Disease','Study of','Pain','Cutting'],1,'Cardiology.'],
   ['"Sono-" relates to…',['Sound','Heat','Light','Salt'],0,'Sonography = recording with sound.']]}};
 
-const SIM_TEASER={weld:'🔥 Welding simulator (travel speed, arc length, work angle): coming in Phase 2.',ultrasound:'🩺 Ultrasound probe simulator (scan-plane & image identification): coming in Phase 2.'};
+const SIM_TEASER={weld:'🔥 Try the bead lab in the 🧪 Simulator tab: practice arc length, work angle and travel speed.',ultrasound:'🩺 Try the image lab in the 🧪 Simulator tab: choose a probe, set depth and gain, and name the findings.'};
 const EXPLAIN={
 iv1:{why:'The novel is a frame narrative: Louis tells his life to a skeptical interviewer. Anne Rice uses this to make us judge Louis the way the boy does. Notice WHO is speaking, WHY he tells it now, and what he leaves out. Louis\u2019s guilt about killing is the book\u2019s central moral problem: he hates what he is yet cannot stop.',how:'Read in short chunks. After each, write one sentence: "Louis feels ___ because ___." Pick the quote that proves it. A strong journal connects ONE event to ONE theme (grief, guilt, or identity) instead of retelling the plot.',tip:'Plot summary earns a 2/5. Explaining why the detail matters earns a 5/5.'},
 gothic:{why:'Gothic literature uses dark settings, the supernatural, and psychological fear to explore what people try to hide: guilt, desire, mortality. New Orleans itself (heat, decay, old houses, cemeteries) works as a Gothic setting here.',how:'For each element: name it, quote or point to the scene, then explain the EFFECT on the reader ("this creates dread because\u2026").',tip:'Use the three-part pattern: element, evidence, effect.'},
@@ -152,4 +152,5 @@ econ2:{why:'Demand says people buy less as price rises; supply says producers of
 wweld:{why:'Spotting hazards before they happen is the core professional skill. A shop inspection is exactly what a safety officer does.',how:'Walk the garage with a clipboard. For each hazard write what it is, why it is dangerous, and the fix. Check flammables near the work area, ventilation, extinguisher, and cord condition.',tip:'Photos make your report stronger.'},
 'q-med1':{why:'Medical words are built like Lego: prefix + root + suffix. Learn the parts and you can decode thousands of terms.',how:'Say the term, then split it. "Gastr/itis" = stomach + inflammation.',tip:'Make flashcards of every part you miss.'},
 wmed:{why:'Breaking words apart is the skill that lets sonographers read orders and charts quickly.',how:'For each term write prefix, root, suffix, and the meaning in plain English. Check a medical dictionary for pronunciation.',tip:'Teach three of them aloud to someone at home.'}};
+
 

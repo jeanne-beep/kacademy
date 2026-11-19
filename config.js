@@ -1,2 +1,3 @@
 ﻿// The anon key is designed to be public. Data is protected by each person's login plus row-level security.
-const KAE_CFG={url:'https://wcmfvzimejczasgdrjja.supabase.co',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjbWZ2emltZWpjemFzZ2RyamphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwOTc3MzUsImV4cCI6MjExMDY3MzczNX0.uUKty1Ux17DALGdspxw37Lp9Fj4t9NvTrTv36Pxeceo',domain:'kacademy.invalid'};
+const KAE_CFG={url:'https://wcmfvzimejczasgdrjja.supabase.co',anonKey:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndjbWZ2emltZWpjemFzZ2RyamphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwOTc3MzUsImV4cCI6MjExMDY3MzczNX0.uUKty1Ux17DALGdspxw37Lp9Fj4t9NvTrTv36Pxeceo',domain:'kacademy.invalid',vapidPublic:'BE2VbNm5S4ucotlCCGkGiCl0KmSjH-KcS3BrcJ1M_rakvAKmS4MxItU5Pp5YjzdkIFkDKs4RCIaRZ1VgZXogy90'};
+

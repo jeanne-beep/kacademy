@@ -39,3 +39,30 @@ exception when duplicate_object then null; end $$;
 
 grant usage on schema public to authenticated;
 grant select, insert, update, delete on public.kv to authenticated;
+
+-- Phone reminders (Web Push). Placeholders __PROJECT_REF__ and __CRON_SECRET__ are filled in at setup time.
+create table if not exists push_subs (endpoint text primary key, person text not null, sub jsonb not null, created_at timestamptz not null default now());
+create table if not exists reminders (
+  id text primary key, person text not null, task_id text,
+  fire_at timestamptz not null, title text, body text, sent boolean not null default false);
+create index if not exists reminders_due on reminders (fire_at) where not sent;
+alter table push_subs enable row level security;
+alter table reminders enable row level security;
+drop policy if exists own on push_subs;
+drop policy if exists own on reminders;
+create policy own on push_subs for all to authenticated using (person = public.kae_me()) with check (person = public.kae_me());
+create policy own on reminders for all to authenticated using (person = public.kae_me()) with check (person = public.kae_me());
+grant select, insert, update, delete on public.push_subs, public.reminders to authenticated;
+
+create extension if not exists pg_cron;
+create extension if not exists pg_net with schema extensions;
+select cron.unschedule(jobid) from cron.job where jobname = 'send-reminders';
+select cron.schedule('send-reminders', '* * * * *', $cron$
+  select net.http_post(
+    url := 'https://__PROJECT_REF__.supabase.co/functions/v1/send-reminders',
+    headers := '{"x-cron-secret": "__CRON_SECRET__"}'::jsonb,
+    body := '{}'::jsonb);
+$cron$);
+
+grant usage on schema public to service_role;
+grant all on public.kv, public.reminders, public.push_subs to service_role;

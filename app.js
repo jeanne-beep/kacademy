@@ -32,16 +32,16 @@ const CHIP={todo:['To do','c-todo'],late:['Past due','c-late'],submitted:['Submi
 const chip=st=>`<span class="chip ${CHIP[st][1]}">${CHIP[st][0]}</span>`;
 
 // ---------- shell ----------
-const STU_TABS=[['week','📅 This Week'],['cal','🗓️ Calendar'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['play','🎮 Play & Learn'],['links','🔗 Links']];
+const STU_TABS=[['week','📅 This Week'],['cal','🗓️ Calendar'],['courses','📚 Courses'],['act','🎯 ACT'],['career','🛠️ Career'],['sim','🧪 Simulator'],['play','🎮 Play & Learn'],['links','🔗 Links']];
 const PAR_TABS=[['overview','📊 Overview'],['cal','🗓️ Calendar'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['exam','🎓 NCE/NCMHCE'],['settings','⚙️ Settings']];
 function render(){
   const v=$('#view'),nav=$('#nav'),who=$('#who');
   applyTheme();if(!me){nav.innerHTML='';who.innerHTML='';v.innerHTML=vLogin();return}
-  const p=person(me);who.innerHTML=`${p.e} ${esc(p.name)} <button class="btn s sm" onclick="themePicker()">🎨</button> <button class="btn s sm" onclick="logout()">Switch</button>`;
+  const p=person(me);who.innerHTML=`${p.e} ${esc(p.name)} <button class="btn s sm" onclick="pushPrompt()">🔔</button> <button class="btn s sm" onclick="themePicker()">🎨</button> <button class="btn s sm" onclick="logout()">Switch</button>`;
   const tabs=p.parent?PAR_TABS:STU_TABS;
   if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
   nav.innerHTML=tabs.map(([k,l])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
-  const M={cal:vCal,week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,exam:vExam,play:vPlay,settings:vSettings};
+  const M={sim:vSim,cal:vCal,week:vWeek,courses:vCourses,act:vAct,career:vCareer,links:vLinks,overview:vOverview,grade:vGrade,assign:vAssign,hours:vHours,invoice:vInvoice,checkin:vCheckin,exam:vExam,play:vPlay,settings:vSettings};
   v.innerHTML=(p.parent?'':vDueSoon())+M[tab]()}
 function go(t){tab=t;sel=null;render();scrollTo(0,0)}
 function vLogin(){return`<div class="card"><h1>🏫 K\u2019s Academy of Excellence</h1><p class="mut">Who is here?</p><div class="grid">${PEOPLE.map(p=>`<button class="tile" onclick="pickPerson('${p.id}')"><span class="big">${p.e}</span>${esc(p.name)}</button>`).join('')}</div></div>`}
@@ -144,7 +144,7 @@ function vLinks(){return`<h1>🔗 Links</h1><div class="card"><a class="btn g" h
 function vOverview(){return`<h1>Progress</h1>`+STUDENTS.map(p=>{const l=asgFor(p),done=l.filter(a=>!['todo','late'].includes(stateOf(p,a))).length,late=l.filter(a=>stateOf(p,a)==='late').length,sub=l.filter(a=>stateOf(p,a)==='submitted').length;
   const gr=l.map(a=>{const g=gradeOf(p,a.id);if(!g)return null;const t=(RUB[a.rub]||RUB.gen).reduce((x,r)=>x+r[1],0);return g.scores.reduce((x,y)=>x+y,0)/t}).filter(x=>x!==null);
   const qs=l.filter(a=>a.quiz&&subOf(p,a.id)).map(a=>subOf(p,a.id).score/QUIZ[a.quiz].qs.length),all=gr.concat(qs);
-  return`<div class="card"><h3>${person(p).e} ${person(p).name}</h3><div class="bar"><i style="width:${l.length?done/l.length*100:0}%"></i></div><p class="sm">${done}/${l.length} done · ${sub} awaiting grading · ${late} past due · average ${all.length?Math.round(all.reduce((x,y)=>x+y,0)/all.length*100)+'%':'n/a'}</p>
+  return`<div class="card"><h3>${person(p).e} ${person(p).name}</h3>${simLine(p)}<div class="bar"><i style="width:${l.length?done/l.length*100:0}%"></i></div><p class="sm">${done}/${l.length} done · ${sub} awaiting grading · ${late} past due · average ${all.length?Math.round(all.reduce((x,y)=>x+y,0)/all.length*100)+'%':'n/a'}</p>
   ${l.map(a=>`<div class="row click" onclick="reviewOpen('${p}','${a.id}')"><span class="grow">${COURSES[a.course].e} ${esc(a.title)} <span class="sm mut">due ${fdate(a.due)}</span></span>${chip(stateOf(p,a))}</div>`).join('')}</div>`}).join('')}
 function reviewOpen(p,id){const a=allAsg().find(x=>x.id===id);if(a.quiz){const s=subOf(p,id);return toast(s?`Quiz ${s.score}/${QUIZ[a.quiz].qs.length}`:'Not taken yet')}tab='grade';sel=p+'|'+id;render()}
 function vGrade(){
@@ -232,6 +232,8 @@ function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.strin
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
+
 
 
 

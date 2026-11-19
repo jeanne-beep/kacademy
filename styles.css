@@ -24,3 +24,7 @@ table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}td,th{bord
 
 .lesson summary{cursor:pointer;font-size:16px}.lesson h4{margin:14px 0 4px;color:var(--ac)}.lesson p{margin:4px 0;line-height:1.5}
 .syncdot{position:fixed;bottom:6px;right:8px;font-size:11px;background:#000a;color:#fff;padding:3px 8px;border-radius:10px;z-index:5}.syncdot.bad{background:#7c2d12}
+.gauge{margin:10px 0}.gl{margin-bottom:4px}.gtrack{position:relative;height:18px;background:var(--bg);border-radius:9px;overflow:hidden}.gzone{position:absolute;top:0;bottom:0;background:#16a34a55}
+.needle{position:absolute;top:0;bottom:0;width:6px;margin-left:-3px;border-radius:3px;background:#f87171}.needle.ok{background:#34d399}
+.bead{display:flex;align-items:center;gap:1px;height:30px;background:#3f3f46;border-radius:8px;padding:0 4px;overflow:hidden}.bead i{display:block;width:6px;border-radius:3px}
+.usbox{background:#000;border-radius:12px;padding:4px;margin:8px 0;max-width:340px}.us{width:100%;display:block}
