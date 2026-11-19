@@ -48,3 +48,19 @@ function calAdd(){
   save();toast('Added');render();
 }
 function calDel(id){S.cal=calList().filter(e=>e.id!==id);save();render()}
+
+const THEMES={
+ night:{n:'Night blue',bg:'#0f172a',card:'#1e293b',tx:'#e2e8f0',mut:'#94a3b8',ac:'#34d399',ac2:'#6366f1',top:'#1e1b4b',nav:'#161e36',pill:'#243258'},
+ forest:{n:'Forest',bg:'#0b1f17',card:'#14352a',tx:'#e6f4ea',mut:'#9bc3ad',ac:'#a3e635',ac2:'#15803d',top:'#0a3d2a',nav:'#0e2a1f',pill:'#1c4a39'},
+ ocean:{n:'Ocean',bg:'#06202b',card:'#0c3445',tx:'#e0f2fe',mut:'#8fbfd6',ac:'#22d3ee',ac2:'#0284c7',top:'#083a52',nav:'#082a39',pill:'#10506b'},
+ sunset:{n:'Sunset',bg:'#2a1020',card:'#3d1a30',tx:'#ffe9ef',mut:'#e0a3b8',ac:'#fb923c',ac2:'#e11d48',top:'#5b1a3a',nav:'#35132a',pill:'#5a2646'},
+ grape:{n:'Grape',bg:'#1c1033',card:'#2c1b4d',tx:'#f1e8ff',mut:'#b9a3e0',ac:'#f0abfc',ac2:'#9333ea',top:'#3b1a6b',nav:'#251445',pill:'#43286f'},
+ steel:{n:'Steel & ember',bg:'#18181b',card:'#27272a',tx:'#f4f4f5',mut:'#a1a1aa',ac:'#f97316',ac2:'#52525b',top:'#3f3f46',nav:'#202023',pill:'#3a3a40'},
+ light:{n:'Light',bg:'#f4f6fb',card:'#ffffff',tx:'#1e293b',mut:'#64748b',ac:'#059669',ac2:'#4f46e5',top:'#c7d2fe',nav:'#e2e8f0',pill:'#cbd5e1'}
+};
+function applyTheme(){
+  const k=me&&localStorage.getItem('kae_theme_'+me),t=THEMES[k]||THEMES.night,r=document.documentElement.style;
+  ['bg','card','tx','mut','ac','ac2','top','nav','pill'].forEach(x=>r.setProperty('--'+x,t[x]));
+}
+function themePicker(){modal(`<h3>🎨 Pick your colors</h3><div class="grid">${Object.entries(THEMES).map(([k,t])=>`<button class="tile" style="background:${t.card};color:${t.tx};border:3px solid ${t.ac}" onclick="setTheme('${k}')">${t.n}</button>`).join('')}</div><button class="btn s" onclick="closeModal()">Close</button>`)}
+function setTheme(k){localStorage.setItem('kae_theme_'+me,k);applyTheme();closeModal()}

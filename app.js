@@ -36,8 +36,8 @@ const STU_TABS=[['week','📅 This Week'],['cal','🗓️ Calendar'],['courses',
 const PAR_TABS=[['overview','📊 Overview'],['cal','🗓️ Calendar'],['grade','✅ Grade'],['assign','➕ Assign'],['hours','⏱️ Hours'],['invoice','🧾 Invoices'],['checkin','💬 Check-in'],['exam','🎓 NCE/NCMHCE'],['settings','⚙️ Settings']];
 function render(){
   const v=$('#view'),nav=$('#nav'),who=$('#who');
-  if(!me){nav.innerHTML='';who.innerHTML='';v.innerHTML=vLogin();return}
-  const p=person(me);who.innerHTML=`${p.e} ${esc(p.name)} <button class="btn s sm" onclick="logout()">Switch</button>`;
+  applyTheme();if(!me){nav.innerHTML='';who.innerHTML='';v.innerHTML=vLogin();return}
+  const p=person(me);who.innerHTML=`${p.e} ${esc(p.name)} <button class="btn s sm" onclick="themePicker()">🎨</button> <button class="btn s sm" onclick="logout()">Switch</button>`;
   const tabs=p.parent?PAR_TABS:STU_TABS;
   if(!tabs.some(t=>t[0]===tab))tab=tabs[0][0];
   nav.innerHTML=tabs.map(([k,l])=>`<button class="${k===tab?'on':''}" onclick="go('${k}')">${l}</button>`).join('');
@@ -232,6 +232,7 @@ function resetPin(id){delete pins[id];localStorage.setItem('kae_pins',JSON.strin
 
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 render();
+
 
 
 
