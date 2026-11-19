@@ -23,3 +23,4 @@ table{width:100%;border-collapse:collapse;font-size:14px;margin:8px 0}td,th{bord
 
 
 .lesson summary{cursor:pointer;font-size:16px}.lesson h4{margin:14px 0 4px;color:var(--ac)}.lesson p{margin:4px 0;line-height:1.5}
+.syncdot{position:fixed;bottom:6px;right:8px;font-size:11px;background:#000a;color:#fff;padding:3px 8px;border-radius:10px;z-index:5}.syncdot.bad{background:#7c2d12}

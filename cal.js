@@ -1,7 +1,7 @@
-'use strict';
+﻿'use strict';
 const CAL_TYPES={appt:'🩺 Appointment',work:'💼 Work shift',class:'🎓 Class',school:'📚 School',test:'🎯 Test / ACT',other:'📌 Other'};
 let calView='week',calFilter='all';
-const calList=()=>(S.cal=S.cal||[]);
+const calList=()=>{if(!S.cal||Array.isArray(S.cal)){const o={};(S.cal||[]).forEach(e=>o[e.id]=e);S.cal=o}return Object.values(S.cal)};
 function calExpand(from,to){
   const out=[];
   calList().forEach(e=>{
@@ -44,10 +44,10 @@ ${days}
 function calAdd(){
   const title=$('#ce_t').value.trim(),date=$('#ce_d').value;
   if(!title||!date)return toast('Add a title and date');
-  calList().push({id:'e'+Date.now(),title,date,who:$('#ce_w').value,type:$('#ce_y').value,start:$('#ce_s').value,end:$('#ce_e').value,rep:$('#ce_r').checked,note:$('#ce_n').value.trim(),by:me});
+  calList();const id='e'+Date.now();S.cal[id]={id,title,date,who:$('#ce_w').value,type:$('#ce_y').value,start:$('#ce_s').value,end:$('#ce_e').value,rep:$('#ce_r').checked,note:$('#ce_n').value.trim(),by:me};
   save();toast('Added');render();
 }
-function calDel(id){S.cal=calList().filter(e=>e.id!==id);save();render()}
+function calDel(id){calList();delete S.cal[id];save();render()}
 
 const THEMES={
  night:{n:'Night blue',bg:'#0f172a',card:'#1e293b',tx:'#e2e8f0',mut:'#94a3b8',ac:'#34d399',ac2:'#6366f1',top:'#1e1b4b',nav:'#161e36',pill:'#243258'},
@@ -64,3 +64,4 @@ function applyTheme(){
 }
 function themePicker(){modal(`<h3>🎨 Pick your colors</h3><div class="grid">${Object.entries(THEMES).map(([k,t])=>`<button class="tile" style="background:${t.card};color:${t.tx};border:3px solid ${t.ac}" onclick="setTheme('${k}')">${t.n}</button>`).join('')}</div><button class="btn s" onclick="closeModal()">Close</button>`)}
 function setTheme(k){localStorage.setItem('kae_theme_'+me,k);applyTheme();closeModal()}
+
